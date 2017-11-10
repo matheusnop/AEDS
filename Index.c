@@ -9,7 +9,7 @@ int main(){
     chamador=fopen("teste.txt","r");
     int a=0;
     printf("Bem vindo ao SuduDurelli, escolha uma das opces abaixo: ");
-    printf("\n 1 - Modo 1 \n 2 - Mod 2 \n 3 - Recorde \n 4 - Instrucoes. OBS: os zeros são os lugares onde entraram os valores");
+    printf("\n 1 - Modo 1 \n 2 - Modo 2 \n 3 - Recorde \n 4 - Instrucoes.");
     scanf("%d",&a);
     switch (a){
         case 1:
