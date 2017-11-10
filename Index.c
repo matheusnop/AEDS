@@ -23,8 +23,8 @@ int main(){
 
                 break;
         case 4:
-                printf("No Modo 1 você jogara com um Sudoku gerado aleatório.\nNo modo 2 você jogará com um Sudoku pronto.\n Recordes.\n OBS: o ");
+                printf("No Modo 1 você jogara com um Sudoku gerado aleatório.\nNo modo 2 você jogará com um Sudoku pronto.\nRecordes exibe os melhores tempos.\nOBS: para apagar o valor que você colocou previamente, coloque o agora com o valor de -1\n");
+                main();
     }
-
 return 0;
 }

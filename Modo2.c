@@ -98,7 +98,7 @@ void pegaValores(int valor[3]){ //funcao que pega valores e confere se sao valid
     }
     valor[0]--;
     valor[1]--;
-    if (valor[2]<1 || valor[2]>9){
+    if (valor[2]<-1 || valor[2]>9){
         printf("\nValor inválido, por favor digite numeros entre 1 e 9\n");
         pegaValores(valor);
     }
@@ -139,7 +139,9 @@ int main(){
                     scanf("%d",&corrigir);
                 }
             } while (corrigir!=1);
-            printf("Voce gastou: %d:%d:%d",horas,minutos,segundos);
+                if (corrigir==1){
+                    break;
+                }
             break;
         case 2:
              a=rand()%7;
