@@ -4,9 +4,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "colors.h"
+#include "Record.h"
 #define tam 9
 
-void inicializaTabuleiro(int tabuleiro[][tam],  int tabuleiro1[][tam], int nivel){ //função que inicializa o jogo do usuário
+void inicializaTabuleiro(int tabuleiro[][tam],  int tabuleiro1[][tam], int tabuleiro2[][tam], int nivel){ //função que inicializa o jogo do usuário
 
 int linha, coluna,num, i, j;;
      FILE *arq = fopen("sudoku.txt", "r");
@@ -65,6 +66,12 @@ int linha, coluna,num, i, j;;
 							tabuleiro[i][j]=-1;
 						}		
 					}
+					
+				for(linha=0; linha<tam; linha++){
+         		for(coluna=0; coluna<tam; coluna++){
+             	 	tabuleiro2[linha][coluna]=tabuleiro[linha][coluna];
+        		}    
+			}	
  		}	 
 		 fclose(arq);
 }
@@ -89,7 +96,7 @@ void mostraTabuleiro(int tabuleiro[][tam]){//função que mostra o arquivo carrega
                         printf("%2d |", tabuleiro[linha][coluna]);
                     }
                      else{
-                        printf("   |", tabuleiro[linha][coluna]);
+                        printf("   |");
                     }
         	} 
 			 printf("\t%c",linha+49);  
@@ -120,18 +127,21 @@ void pegaValores(int valor[3]){ //funcao que pega valores e confere se sao valid
         pegaValores(valor);
     }
 }
-int confere(int tabuleiro[][tam],int valor[3]){ //conferindo se os valores da coluna y e linha x ja foram digitados ou nao
+
+
+int confere(int tabuleiro[][tam], int tabuleiro2[][tam], int valor[3]){ //conferindo se os valores da coluna y e linha x ja foram digitados ou nao
     int linha=valor[0];
     int coluna=valor[1];
     int valornovo=valor[2];
-    if(tabuleiro[linha][coluna]==-1){
+    if(tabuleiro2[linha][coluna]==-1){
         tabuleiro[linha][coluna]=valornovo;
         return (tabuleiro);
     }
     else{
-        tabuleiro[linha][coluna]=valornovo;
+       return tabuleiro[linha][coluna];
     }
 }
+
 
 int compara(int tabuleiro[][tam], int tabuleiro1[][tam], int valor[3]){ //conferindo se o jogo esta correto.
     int linha=valor[0];
@@ -148,7 +158,8 @@ int compara(int tabuleiro[][tam], int tabuleiro1[][tam], int valor[3]){ //confer
     }
 }
 
-int comparacaofinal(int tabuleiro[][tam], int tabuleiro1[][tam]){ //conferindo no final se o jogo esta correto.
+
+void comparacaofinal(int tabuleiro[][tam], int tabuleiro1[][tam]){ //conferindo no final se o jogo esta correto.
     int linha, coluna, a=0, b;
     for(linha=0; linha<tam; linha++){
     	for(coluna=0; coluna<tam; coluna++){
@@ -159,11 +170,15 @@ int comparacaofinal(int tabuleiro[][tam], int tabuleiro1[][tam]){ //conferindo n
 	}
     if(a==81){
     	system("cls");
-    	printf("Parabens jogo completado com sucesso!!! =D");
-    	printf("\nDeseja jogar novamente? (0 - Não / 1 - Sim): ");
+    	foreground(WHITE);
+    	printf("\n\t\tPARABENS, JOGO COMPLETADO COM SUCESSO!!! =D");
+    	//system("\"C:\\Users\\mathe\\Downloads\\AEDS-Sudoku-master\\AEDS-Sudoku-master\\AEDS-master\\Record.exe\"");
+    	
+    	printf("\n\n\tDeseja jogar novamente? (0 - Nao / 1 - Sim): ");
     	scanf("%d", &b);
     	if(b==1){
-    		return main();
+    		system("cls");
+    	 system("\"C:\\Users\\mathe\\Downloads\\AEDS-Sudoku-master\\AEDS-Sudoku-master\\AEDS-master\\Index.exe\"");
 		}
 		else{
 			return 0;
@@ -179,9 +194,9 @@ int main(){
 	
 	int tabuleiro[tam][tam];
 	int tabuleiro1[tam][tam];
-	int nivel;
-    int horas=0, minutos=0, segundos=0;
-    
+	int tabuleiro2[tam][tam];
+	int nivel; 
+	        
 	int corrigir=0;
     int valor[3];
     
@@ -191,17 +206,18 @@ int main(){
     scanf("%d", &nivel);
     printf("\nPara sair digite o valor zero quando for inserir o valor no Soduku.\n");
     
-    inicializaTabuleiro(tabuleiro, tabuleiro1, nivel);
+	
+    inicializaTabuleiro(tabuleiro, tabuleiro1, tabuleiro2, nivel);
    
     do{
        mostraTabuleiro(tabuleiro);
    	   pegaValores(valor);
-       confere(tabuleiro,valor);
+       confere(tabuleiro,tabuleiro2, valor);
        compara(tabuleiro, tabuleiro1, valor);
        
        
           if (valor[2]==0){
-              printf("Deseja finalizar o Jogo? 0 - Não, 1 - Sim: ");
+              printf("Deseja finalizar o Jogo? 0 - Nao, 1 - Sim: ");
               scanf("%d",&corrigir);
               if(corrigir == 0){
               	printf("\nValor invalido, por favor digite numeros entre 1 e 9\n");
@@ -211,8 +227,9 @@ int main(){
 			  }
           }
           
-          
-    	comparacaofinal(tabuleiro, tabuleiro1);
+       comparacaofinal(tabuleiro, tabuleiro1);
+    	
+    	
                 
     } while (corrigir!=1);
                
