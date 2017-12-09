@@ -1,16 +1,19 @@
 
 // ------------------ NESSE ARQUIVO OCORRE O CARREGAMENTO DO JOGO PELO USUÁRIO ------------------
-
-#include<stdio.h>
-#include<stdlib.h>
+#include <unistd.h>//LINUX
+#include <stdio.h>
+#include <stdlib.h>
 #include "colors.h"
+#include <time.h>
 #define tam 9
+int inicio=0,fim=0;
+
 
 void inicializaTabuleiro(int tabuleiro[][tam],  int tabuleiro1[][tam], int nivel){ //função que inicializa o jogo do usuário
 
-int linha, coluna,num, i, j;;
-     FILE *arq = fopen("sudoku.txt", "r");
-     if((arq = fopen("C:\\Users\\mathe\\Desktop\\AEDS-master\\AEDS-master\\sudoku.txt", "r"))==0){ 
+int linha, coluna,num, i, j;
+     FILE *arq = fopen("sudoku1.txt", "r");
+     if((arq = fopen("sudoku1.txt", "r"))==0){ 
 
          printf("Problemas na abertura do arquivo\n");
          printf("Arquivo nao encontrado\n");
@@ -24,11 +27,11 @@ int linha, coluna,num, i, j;;
  	 	sleep(1);
  	 	printf(".");
  	 	sleep(1);
- 	 	system("cls");
+ 	 	printf("\e[H\e[2J");//LINUX
 		printf("\n\t\t\tJOGO ADICIONADO COM SUCESSO\n\t\t\t\tBOA SORTE! =)");
 		sleep(1);
-		system("cls");
-		
+		printf("\e[H\e[2J");//LINUX
+			inicio=(int)time(NULL);
      		for(linha=0; linha<tam; linha++){
          		for(coluna=0; coluna<tam; coluna++){
              	 	fscanf(arq, "%3d", &tabuleiro[linha][coluna]);
@@ -44,16 +47,16 @@ int linha, coluna,num, i, j;;
 				if(nivel==1){
 					srand(time(NULL));
 						for(num=0; num<41; num++){
-							i=rand()%9;
-							j=rand()%9;
+							i=rand()%7;//acho que sao bons valores de dificuldade
+							j=rand()%7;
 							tabuleiro[i][j]=-1;
 						}
 						
 				} else if (nivel==2){
 					srand(time(NULL));
 						for(num=0; num<60; num++){
-							i=rand()%9;
-							j=rand()%9;
+							i=rand()%8;
+							j=rand()%8;
 							tabuleiro[i][j]=-1;
 						}
 						
@@ -73,13 +76,18 @@ int linha, coluna,num, i, j;;
 void mostraTabuleiro(int tabuleiro[][tam]){//função que mostra o arquivo carregado
 
 	int linha, coluna;
-	system("cls");
+	printf("\e[H\e[2J");//LINUX
 
     for(linha=0; linha<tam; linha++){
     	if(linha==0){
     	printf("\n| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n");
 		}
+			if(linha%3==0){
+				printf("\n+===+===+===+===+===+===+===+===+===+  ===\n");
+				}
+			else{
 		printf("\n+---+---+---+---+---+---+---+---+---+  ===\n");
+	}
         printf("|");
          	for(coluna=0; coluna<tam; coluna++){
          		/*if(linha==0){
@@ -89,16 +97,17 @@ void mostraTabuleiro(int tabuleiro[][tam]){//função que mostra o arquivo carrega
                         printf("%2d |", tabuleiro[linha][coluna]);
                     }
                      else{
-                        printf("   |", tabuleiro[linha][coluna]);
+                        printf("   |");
                     }
         	} 
 			 printf("\t%c",linha+49);  
 		}
-			printf("\n+---+---+---+---+---+---+---+---+---+  ===\n");
+			printf("\n+===+===+===+===+===+===+===+===+===+  ===\n");
 	}
 	  
 
 void pegaValores(int valor[3]){ //funcao que pega valores e confere se sao validos
+   
     printf("Digite a linha: ");
     scanf("%d",&valor[0]);
     printf("\nDigite a coluna: ");
@@ -119,6 +128,7 @@ void pegaValores(int valor[3]){ //funcao que pega valores e confere se sao valid
         printf("\nValor invalido, por favor digite numeros entre 1 e 9\n");
         pegaValores(valor);
     }
+    
 }
 int confere(int tabuleiro[][tam],int valor[3]){ //conferindo se os valores da coluna y e linha x ja foram digitados ou nao
     int linha=valor[0];
@@ -129,11 +139,13 @@ int confere(int tabuleiro[][tam],int valor[3]){ //conferindo se os valores da co
         return (tabuleiro);
     }
     else{
-        tabuleiro[linha][coluna]=valornovo;
+        return tabuleiro[linha][coluna]=valornovo;
     }
+	
+
 }
 
-int compara(int tabuleiro[][tam], int tabuleiro1[][tam], int valor[3]){ //conferindo se o jogo esta correto.
+void compara(int tabuleiro[][tam], int tabuleiro1[][tam], int valor[3]){ //conferindo se o jogo esta correto.
     int linha=valor[0];
     int coluna=valor[1];
     int valornovo=valor[2];
@@ -158,29 +170,64 @@ int comparacaofinal(int tabuleiro[][tam], int tabuleiro1[][tam]){ //conferindo n
 		}
 	}
     if(a==81){
-    	system("cls");
+    	printf("\e[H\e[2J");//LINUX
+    	fim=(int)time(NULL);
     	printf("Parabens jogo completado com sucesso!!! =D");
     	printf("\nDeseja jogar novamente? (0 - Não / 1 - Sim): ");
     	scanf("%d", &b);
-    	if(b==1){
-    		return main();
+    	if(b!=0){
+    	
+    		main();
 		}
 		else{
 			return 0;
 		}
 		
 	} 
-	else{
-    	return (tabuleiro);
-    }
+	
+    //return 0;
 }
+
+int recorde(int tempo){
+	FILE *p;
+	int *rec,i=0,sinal=0;
+	rec=(int*) malloc(5*sizeof(int));
+	p=fopen("recorde.txt", "r");
+	
+	while(!feof(p)){
+		fscanf(p,"%d", &rec[i]);
+		i++;
+		}
+	fclose(p);
+	for(int j=0;j<i-1;j++){
+		if(rec[j]>tempo){
+			rec[j+1]=rec[j];
+			rec[j]=tempo;
+			sinal=j+1;
+			break;
+			}
+		}
+	if(sinal!=0){
+	p=fopen("recorde.txt", "w");
+	for(int j=0;j<i-1;j++){
+		fprintf(p,"%d\n",rec[j]);
+		}
+	fclose(p);
+	
+	printf("Recorde atingido!!!\nPosicao: %d", sinal);
+	//for(int j=0;j<i-1;j++){printf(" %d ",rec[j]);}
+	
+		}
+	return 0;
+	}
+
 
 int main(){
 	
 	int tabuleiro[tam][tam];
 	int tabuleiro1[tam][tam];
 	int nivel;
-    int horas=0, minutos=0, segundos=0;
+
     
 	int corrigir=0;
     int valor[3];
@@ -189,10 +236,11 @@ int main(){
     
     printf("Qual nivel voce deseja?\n1 - Facil.\n2 - Intermediario.\n3 - Dificil.: ");
     scanf("%d", &nivel);
-    printf("\nPara sair digite o valor zero quando for inserir o valor no Soduku.\n");
+    printf("\nPara sair digite o valor zero quando for inserir o valor no Suduku.\n");
+    
+    
     
     inicializaTabuleiro(tabuleiro, tabuleiro1, nivel);
-   
     do{
        mostraTabuleiro(tabuleiro);
    	   pegaValores(valor);
@@ -211,11 +259,17 @@ int main(){
 			  }
           }
           
-          
+        if(comparacaofinal(tabuleiro, tabuleiro1)==0){goto label;}//importante
+        
     	comparacaofinal(tabuleiro, tabuleiro1);
-                
+          
     } while (corrigir!=1);
-               
-
+    
+    label:
+	printf("TEMPO %d\n",(fim - inicio));
+	recorde(fim-inicio);
+	//CHAMAR FUNCAO RECORDE COM ESSE PARAMETRO
+	//pega_recorde (fim - inicio);
+	
 return 0;
 }
